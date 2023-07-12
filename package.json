@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "env-cmd nodemon --watch . index.js",
-    "start": "env-cmd node index.js",
+    "serve": "localdev.bat && env-cmd nodemon --watch . index.js",
+    "start": "localdev.bat && env-cmd node index.js",
     "repl": "env-cmd node"
   },
   "keywords": [],
