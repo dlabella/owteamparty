@@ -18,6 +18,7 @@
         <tr>
           <th>Team Name</th>
           <th>Members</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody id="teamsTableBody">
@@ -30,28 +31,47 @@
       <!-- Dynamically populated by JavaScript -->
     </div>
 
-    <h2>Add Challenge</h2>
+    <h2>Add/Edit Team</h2>
     <div class="row">
-      <form id="challengeForm" class="col s12">
+      <form id="teamForm" class="col s12">
         <div class="row">
           <div class="input-field col s6">
-            <input id="challengeName" type="text" class="validate" required>
-            <label for="challengeName">Challenge Name</label>
+            <input id="teamName" type="text" class="validate" required>
+            <label for="teamName">Team Name</label>
           </div>
           <div class="input-field col s6">
-            <input id="challengeScore" type="number" class="validate" required>
-            <label for="challengeScore">Score</label>
+            <input id="teamMembers" type="text" class="validate" required>
+            <label for="teamMembers">Members (comma-separated)</label>
+          </div>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit" name="action">Add/Edit Team</button>
+        <button class="btn waves-effect waves-light red" type="button" name="action" id="deleteTeamButton">Delete Team</button>
+      </form>
+    </div>
+
+    <h2>Add/Edit Challenge</h2>
+    <div class="row">
+      <form id="editChallengeForm" class="col s12">
+        <div class="row">
+          <div class="input-field col s6">
+            <input id="editChallengeName" type="text" class="validate" required>
+            <label for="editChallengeName">Challenge Name</label>
+          </div>
+          <div class="input-field col s6">
+            <input id="editChallengeScore" type="number" class="validate" required>
+            <label for="editChallengeScore">Score</label>
           </div>
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <select id="assignedTeams" multiple>
+            <select id="editAssignedTeams" multiple>
               <!-- Dynamically populated by JavaScript -->
             </select>
-            <label for="assignedTeams">Assigned Teams</label>
+            <label for="editAssignedTeams">Assigned Teams</label>
           </div>
         </div>
-        <button class="btn waves-effect waves-light" type="submit" name="action">Add Challenge</button>
+        <button class="btn waves-effect waves-light" type="submit" name="action">Update Challenge</button>
+        <button class="btn waves-effect waves-light red" type="button" name="action" id="deleteChallengeButton">Delete Challenge</button>
       </form>
     </div>
   </div>
@@ -61,20 +81,38 @@
     // Define an array to store teams and challenges
     let teams = [];
     let challenges = [];
+    let selectedTeamIndex = -1;
+    let selectedChallengeIndex = -1;
 
     // Function to render teams table
     function renderTeams() {
       const teamsTableBody = document.querySelector('#teamsTableBody');
       teamsTableBody.innerHTML = '';
 
-      teams.forEach((team) => {
+      teams.forEach((team, index) => {
         const row = document.createElement('tr');
         const nameCell = document.createElement('td');
         nameCell.textContent = team.name;
         const membersCell = document.createElement('td');
         membersCell.textContent = team.members.join(', ');
+        const actionCell = document.createElement('td');
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.classList.add('waves-effect', 'waves-light', 'btn');
+        editButton.addEventListener('click', () => {
+          editTeam(index);
+        });
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.classList.add('waves-effect', 'waves-light', 'btn', 'red');
+        deleteButton.addEventListener('click', () => {
+          deleteTeam(index);
+        });
+        actionCell.appendChild(editButton);
+        actionCell.appendChild(deleteButton);
         row.appendChild(nameCell);
         row.appendChild(membersCell);
+        row.appendChild(actionCell);
         teamsTableBody.appendChild(row);
       });
     }
@@ -97,7 +135,7 @@
         const challengeList = document.createElement('ul');
         challengeList.classList.add('collection');
 
-        teamChallenges.forEach((challenge) => {
+        teamChallenges.forEach((challenge, index) => {
           const listItem = document.createElement('li');
           listItem.classList.add('collection-item', 'avatar');
           const challengeName = document.createElement('span');
@@ -119,7 +157,7 @@
           // Add event listener to mark challenge as completed or not
           listItem.addEventListener('click', () => {
             const completed = !challenge.completed;
-            markChallengeCompleted(challenge.name, completed);
+            markChallengeCompleted(index, completed);
           });
         });
 
@@ -131,31 +169,64 @@
     }
 
     // Function to update the assigned teams of a challenge
-    function updateAssignedTeams(challengeName, assignedTeams) {
-      const challenge = challenges.find(challenge => challenge.name === challengeName);
+    function updateAssignedTeams(challengeIndex, assignedTeams) {
+      const challenge = challenges[challengeIndex];
       challenge.assignedTeams = assignedTeams;
       renderChallenges();
     }
 
     // Function to mark a challenge as completed or uncompleted
-    function markChallengeCompleted(challengeName, completed) {
-      const challenge = challenges.find(challenge => challenge.name === challengeName);
+    function markChallengeCompleted(challengeIndex, completed) {
+      const challenge = challenges[challengeIndex];
       challenge.completed = completed;
       renderChallenges();
     }
 
-    // Event listener for the challenge form submission
-    document.querySelector('#challengeForm').addEventListener('submit', (event) => {
-      event.preventDefault();
+    // Function to add or edit a team
+    function addEditTeam(teamName, teamMembers, editIndex) {
+      const members = teamMembers.split(',').map(member => member.trim());
+      const team = {
+        name: teamName,
+        members: members
+      };
 
-      const challengeNameInput = document.querySelector('#challengeName');
-      const challengeScoreInput = document.querySelector('#challengeScore');
-      const assignedTeamsSelect = document.querySelector('#assignedTeams');
+      if (editIndex !== -1) {
+        teams[editIndex] = team;
+      } else {
+        teams.push(team);
+      }
 
-      const challengeName = challengeNameInput.value;
-      const challengeScore = parseInt(challengeScoreInput.value);
-      const assignedTeams = Array.from(assignedTeamsSelect.selectedOptions).map(option => option.value);
+      renderTeams();
+      renderChallenges();
 
+      // Clear the form inputs
+      document.querySelector('#teamName').value = '';
+      document.querySelector('#teamMembers').value = '';
+
+      // Reset selected team index
+      selectedTeamIndex = -1;
+      document.querySelector('#teamForm button').textContent = 'Add/Edit Team';
+      document.querySelector('#deleteTeamButton').style.display = 'none';
+    }
+
+    // Function to delete a team
+    function deleteTeam(index) {
+      teams.splice(index, 1);
+      renderTeams();
+      renderChallenges();
+
+      // Clear the form inputs
+      document.querySelector('#teamName').value = '';
+      document.querySelector('#teamMembers').value = '';
+
+      // Reset selected team index
+      selectedTeamIndex = -1;
+      document.querySelector('#teamForm button').textContent = 'Add/Edit Team';
+      document.querySelector('#deleteTeamButton').style.display = 'none';
+    }
+
+    // Function to add or edit a challenge
+    function addEditChallenge(challengeName, challengeScore, assignedTeams, editIndex) {
       const challenge = {
         name: challengeName,
         score: challengeScore,
@@ -163,15 +234,121 @@
         completed: false
       };
 
-      challenges.push(challenge);
-
-      // Clear the form inputs
-      challengeNameInput.value = '';
-      challengeScoreInput.value = '';
-      assignedTeamsSelect.value = '';
+      if (editIndex !== -1) {
+        challenges[editIndex] = challenge;
+      } else {
+        challenges.push(challenge);
+      }
 
       renderChallenges();
+
+      // Clear the form inputs
+      document.querySelector('#editChallengeName').value = '';
+      document.querySelector('#editChallengeScore').value = '';
+      document.querySelector('#editAssignedTeams').value = '';
+
+      // Reset selected challenge index
+      selectedChallengeIndex = -1;
+      document.querySelector('#editChallengeForm button').textContent = 'Update Challenge';
+      document.querySelector('#deleteChallengeButton').style.display = 'none';
+    }
+
+    // Function to edit a team
+    function editTeam(index) {
+      const team = teams[index];
+      document.querySelector('#teamName').value = team.name;
+      document.querySelector('#teamMembers').value = team.members.join(', ');
+
+      // Update form submit event listener
+      const teamForm = document.querySelector('#teamForm');
+      teamForm.removeEventListener('submit', addEditTeam);
+      teamForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const teamName = document.querySelector('#teamName').value;
+        const teamMembers = document.querySelector('#teamMembers').value;
+        addEditTeam(teamName, teamMembers, index);
+      });
+
+      // Show delete button
+      document.querySelector('#deleteTeamButton').style.display = 'block';
+
+      // Update button label
+      const submitButton = document.querySelector('#teamForm button');
+      submitButton.textContent = 'Edit Team';
+
+      // Update selected team index
+      selectedTeamIndex = index;
+    }
+
+    // Function to edit a challenge
+    function editChallenge(index) {
+      const challenge = challenges[index];
+      document.querySelector('#editChallengeName').value = challenge.name;
+      document.querySelector('#editChallengeScore').value = challenge.score;
+      document.querySelector('#editAssignedTeams').value = challenge.assignedTeams;
+
+      // Update form submit event listener
+      const editChallengeForm = document.querySelector('#editChallengeForm');
+      editChallengeForm.removeEventListener('submit', addEditChallenge);
+      editChallengeForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const challengeName = document.querySelector('#editChallengeName').value;
+        const challengeScore = document.querySelector('#editChallengeScore').value;
+        const assignedTeams = Array.from(document.querySelector('#editAssignedTeams').selectedOptions).map(option => option.value);
+        addEditChallenge(challengeName, challengeScore, assignedTeams, index);
+      });
+
+      // Show delete button
+      document.querySelector('#deleteChallengeButton').style.display = 'block';
+
+      // Update button label
+      const submitButton = document.querySelector('#editChallengeForm button');
+      submitButton.textContent = 'Update Challenge';
+
+      // Update selected challenge index
+      selectedChallengeIndex = index;
+    }
+
+    // Function to delete a challenge
+    function deleteChallenge() {
+      if (selectedChallengeIndex !== -1) {
+        challenges.splice(selectedChallengeIndex, 1);
+        renderChallenges();
+      }
+
+      // Clear the form inputs
+      document.querySelector('#editChallengeName').value = '';
+      document.querySelector('#editChallengeScore').value = '';
+      document.querySelector('#editAssignedTeams').value = '';
+
+      // Reset selected challenge index
+      selectedChallengeIndex = -1;
+      document.querySelector('#editChallengeForm button').textContent = 'Update Challenge';
+      document.querySelector('#deleteChallengeButton').style.display = 'none';
+    }
+
+    // Event listener for the team form submission
+    document.querySelector('#teamForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const teamName = document.querySelector('#teamName').value;
+      const teamMembers = document.querySelector('#teamMembers').value;
+      addEditTeam(teamName, teamMembers, selectedTeamIndex);
     });
+
+    // Event listener for the edit challenge form submission
+    document.querySelector('#editChallengeForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const challengeName = document.querySelector('#editChallengeName').value;
+      const challengeScore = document.querySelector('#editChallengeScore').value;
+      const assignedTeams = Array.from(document.querySelector('#editAssignedTeams').selectedOptions).map(option => option.value);
+      addEditChallenge(challengeName, challengeScore, assignedTeams, selectedChallengeIndex);
+    });
+
+    // Event listener for the delete team button
+    document.querySelector('#deleteTeamButton').addEventListener('click', deleteTeam);
+
+    // Event listener for the delete challenge button
+    document.querySelector('#deleteChallengeButton').addEventListener('click', deleteChallenge);
 
     // Initialize the app with sample data
     teams = [
@@ -202,12 +379,12 @@
     ];
 
     // Populate the assigned teams select options
-    const assignedTeamsSelect = document.querySelector('#assignedTeams');
+    const editAssignedTeamsSelect = document.querySelector('#editAssignedTeams');
     teams.forEach((team) => {
       const option = document.createElement('option');
       option.value = team.name;
       option.textContent = team.name;
-      assignedTeamsSelect.appendChild(option);
+      editAssignedTeamsSelect.appendChild(option);
     });
 
     // Render the initial state of the app
