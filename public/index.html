@@ -1,53 +1,221 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.0.1-alpha/dist/css/materialize.min.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>OW Team Party</title> 
-        <link
-        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet"
-      />
-      <link href="css/style.css" rel="stylesheet" media="screen,projection" />
-    </head>
-    <body>
-      <nav role="navigation" class="light-blue lighten-1">
-        <div class="nav-wrapper container">
-          <a href="#" class="brand-logo">Logo</a>
-          <ul class="right hide-on-med-and-down">
-            <li><a href="/teams.html">Teams</a></li>
-          </ul>
-  
-          <ul id="nav-mobile" class="sidenav">
-            <li><a href="/teams.html">Teams</a></li>
-          </ul>
-          <a href="#" data-target="nav-mobile" class="sidenav-trigger"
-            ><i class="material-icons menu">menu</i></a
-          >
-        </div>
-      </nav>
-      <div class="section">
-        <div class="container">
-          <h1 class="header center-align">OW Team Party</h1>
-        </div>
-      </div>
-  
-      <div class="container">
-        <div class="section">
-          <div class="row">
-            <div class="col s12 m12">
-              <p class="center">
-                There's no active parties at the moment
-              </p>
-            </div>
+<head>
+  <title>Team Management App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">Team Management App</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Teams</h2>
+    <table class="striped">
+      <thead>
+        <tr>
+          <th>Team Name</th>
+          <th>Members</th>
+        </tr>
+      </thead>
+      <tbody id="teamsTableBody">
+        <!-- Dynamically populated by JavaScript -->
+      </tbody>
+    </table>
+
+    <h2>Challenges</h2>
+    <div id="challengesContainer">
+      <!-- Dynamically populated by JavaScript -->
+    </div>
+
+    <h2>Add Challenge</h2>
+    <div class="row">
+      <form id="challengeForm" class="col s12">
+        <div class="row">
+          <div class="input-field col s6">
+            <input id="challengeName" type="text" class="validate" required>
+            <label for="challengeName">Challenge Name</label>
+          </div>
+          <div class="input-field col s6">
+            <input id="challengeScore" type="number" class="validate" required>
+            <label for="challengeScore">Score</label>
           </div>
         </div>
-        <br><br>
-      </div>
-      <!-- Compiled and minified JavaScript -->
-      <script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.0.1-alpha/dist/js/materialize.min.js"></script>
-      <script>
-        M.AutoInit();
-      </script>
-    </body>
-  </html>
+        <div class="row">
+          <div class="input-field col s12">
+            <select id="assignedTeams" multiple>
+              <!-- Dynamically populated by JavaScript -->
+            </select>
+            <label for="assignedTeams">Assigned Teams</label>
+          </div>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit" name="action">Add Challenge</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    // Define an array to store teams and challenges
+    let teams = [];
+    let challenges = [];
+
+    // Function to render teams table
+    function renderTeams() {
+      const teamsTableBody = document.querySelector('#teamsTableBody');
+      teamsTableBody.innerHTML = '';
+
+      teams.forEach((team) => {
+        const row = document.createElement('tr');
+        const nameCell = document.createElement('td');
+        nameCell.textContent = team.name;
+        const membersCell = document.createElement('td');
+        membersCell.textContent = team.members.join(', ');
+        row.appendChild(nameCell);
+        row.appendChild(membersCell);
+        teamsTableBody.appendChild(row);
+      });
+    }
+
+    // Function to render challenges for each team
+    function renderChallenges() {
+      const challengesContainer = document.querySelector('#challengesContainer');
+      challengesContainer.innerHTML = '';
+
+      teams.forEach((team) => {
+        const teamChallenges = challenges.filter((challenge) => challenge.assignedTeams.includes(team.name));
+
+        const teamCard = document.createElement('div');
+        teamCard.classList.add('card');
+        const cardContent = document.createElement('div');
+        cardContent.classList.add('card-content');
+        const cardTitle = document.createElement('span');
+        cardTitle.classList.add('card-title');
+        cardTitle.textContent = team.name;
+        const challengeList = document.createElement('ul');
+        challengeList.classList.add('collection');
+
+        teamChallenges.forEach((challenge) => {
+          const listItem = document.createElement('li');
+          listItem.classList.add('collection-item', 'avatar');
+          const challengeName = document.createElement('span');
+          challengeName.classList.add('title');
+          challengeName.textContent = challenge.name;
+          const challengeScore = document.createElement('p');
+          challengeScore.textContent = `Score: ${challenge.score}`;
+          const challengeStatus = document.createElement('p');
+          challengeStatus.textContent = challenge.completed ? 'Completed' : 'Not Completed';
+          if (challenge.completed) {
+            listItem.classList.add('completed');
+          }
+
+          listItem.appendChild(challengeName);
+          listItem.appendChild(challengeScore);
+          listItem.appendChild(challengeStatus);
+          challengeList.appendChild(listItem);
+
+          // Add event listener to mark challenge as completed or not
+          listItem.addEventListener('click', () => {
+            const completed = !challenge.completed;
+            markChallengeCompleted(challenge.name, completed);
+          });
+        });
+
+        cardContent.appendChild(cardTitle);
+        cardContent.appendChild(challengeList);
+        teamCard.appendChild(cardContent);
+        challengesContainer.appendChild(teamCard);
+      });
+    }
+
+    // Function to update the assigned teams of a challenge
+    function updateAssignedTeams(challengeName, assignedTeams) {
+      const challenge = challenges.find(challenge => challenge.name === challengeName);
+      challenge.assignedTeams = assignedTeams;
+      renderChallenges();
+    }
+
+    // Function to mark a challenge as completed or uncompleted
+    function markChallengeCompleted(challengeName, completed) {
+      const challenge = challenges.find(challenge => challenge.name === challengeName);
+      challenge.completed = completed;
+      renderChallenges();
+    }
+
+    // Event listener for the challenge form submission
+    document.querySelector('#challengeForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const challengeNameInput = document.querySelector('#challengeName');
+      const challengeScoreInput = document.querySelector('#challengeScore');
+      const assignedTeamsSelect = document.querySelector('#assignedTeams');
+
+      const challengeName = challengeNameInput.value;
+      const challengeScore = parseInt(challengeScoreInput.value);
+      const assignedTeams = Array.from(assignedTeamsSelect.selectedOptions).map(option => option.value);
+
+      const challenge = {
+        name: challengeName,
+        score: challengeScore,
+        assignedTeams: assignedTeams,
+        completed: false
+      };
+
+      challenges.push(challenge);
+
+      // Clear the form inputs
+      challengeNameInput.value = '';
+      challengeScoreInput.value = '';
+      assignedTeamsSelect.value = '';
+
+      renderChallenges();
+    });
+
+    // Initialize the app with sample data
+    teams = [
+      { name: 'Team 1', members: ['John', 'Jane'] },
+      { name: 'Team 2', members: ['Alice', 'Bob'] },
+      { name: 'Team 3', members: ['Charlie', 'Daisy'] }
+    ];
+
+    challenges = [
+      { 
+        name: 'Challenge 1', 
+        score: 10, 
+        assignedTeams: ['Team 1'], 
+        completed: false
+      },
+      { 
+        name: 'Challenge 2', 
+        score: 15, 
+        assignedTeams: ['Team 2'], 
+        completed: true
+      },
+      { 
+        name: 'Challenge 3', 
+        score: 20, 
+        assignedTeams: ['Team 1', 'Team 3'], 
+        completed: false
+      }
+    ];
+
+    // Populate the assigned teams select options
+    const assignedTeamsSelect = document.querySelector('#assignedTeams');
+    teams.forEach((team) => {
+      const option = document.createElement('option');
+      option.value = team.name;
+      option.textContent = team.name;
+      assignedTeamsSelect.appendChild(option);
+    });
+
+    // Render the initial state of the app
+    renderTeams();
+    renderChallenges();
+
+    // Initialize MaterializeCSS components
+    M.AutoInit();
+  </script>
+</body>
+</html>
