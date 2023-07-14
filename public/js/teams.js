@@ -54,9 +54,11 @@ class TeamManager extends ItemManager {
         this.addItem(team);
         this.resetTeamFromUI();
     }
+
     isValidTeam(team) {
         return (team && team.name && team.name.trim() != "" && team.members && team.members.length > 0 && team.members[0] != "");
     }
+    
     updateTeam() {
         let team = this.getTeamFromUI();
         if (!this.isValidTeam(team)) {
