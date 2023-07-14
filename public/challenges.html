@@ -5,45 +5,40 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/materialize-css@1.0.0/dist/css/materialize.min.css">
   <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/teams.css">
+  <link rel="stylesheet" href="/css/challenges.css">
 </head>
 <body>
   <div class="container">
-    <h1 class="header">Team Management</h1>
+    <h1 class="header">Challenge Management</h1>
 
     <div class="row">
-      <div class="input-field col s12">
-        <input type="text" id="teamName" placeholder="Enter the team name">
-        <label for="teamName">Team Name</label>
+      <div class="input-field col s10">
+        <input type="text" id="challengeName" placeholder="Enter the challenge name">
+        <label for="challegenName">Challenge Name</label>
+      </div>
+      <div class="input-field col s2">
+        <input type="text" id="challengeScore" placeholder="Enter Challenge Score">
+        <label for="challengeScore">Score</label>
       </div>
     </div>
-
-    <div class="row">
-      <div class="input-field col s12">
-        <input type="text" id="teamMembers" placeholder="Enter team members (comma-separated)">
-        <label for="teamMembers">Team Members</label>
-      </div>
-    </div>
-
     <div class="row">
       <div class="col s12">
-        <button id="add" class="btn waves-effect waves-light" type="button">Add Team</button>
-        <button id="update" class="btn waves-effect waves-light" type="button" disabled>Update Team</button>
+        <button id="add" class="btn waves-effect waves-light" type="button">Add Challenge</button>
+        <button id="update" class="btn waves-effect waves-light" type="button" disabled>Update Challenge</button>
         <button id="cancel" class="btn waves-effect waves-light" type="button" disabled>Cancel</button>
       </div>
     </div>
 
     <h2 class="header">Teams</h2>
-    <table id="teamTable" class="striped">
+    <table id="challengeTable" class="striped">
       <thead>
         <tr>
           <th>Name</th>
-          <th>Members</th>
-          <th>Action</th>
+          <th>Score</th>
         </tr>
       </thead>
       <tbody>
-        <!-- Teams data will be dynamically added here -->
+        <!-- Challenge data will be dynamically added here -->
       </tbody>
     </table>
   </div>
@@ -51,6 +46,6 @@
   <script src="https://cdn.jsdelivr.net/npm/materialize-css@1.0.0/dist/js/materialize.min.js"></script>
   <script src="/js/common.js"></script>
   <script src="/js/commonUi.js"></script>
-  <script src="/js/teams.js"></script>
+  <script src="/js/challenges.js"></script>
 </body>
 </html>

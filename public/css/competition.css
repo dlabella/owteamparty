@@ -1,0 +1,47 @@
+.team-section {
+    margin-bottom: 20px;
+}
+
+.team-section h3 {
+    flex: 1;
+    margin-bottom: 10px;
+}
+
+.challenge-item {
+    margin-bottom: 5px;
+}
+
+.challenge-item input[type="checkbox"] {
+    margin-left: 10px;
+}
+
+.team-header {
+    background-color: lightsteelblue;
+    padding: 5px 15px 5px 15px;
+    display: flex;
+}
+
+h3 {
+    margin: 0;
+    padding: 0;
+}
+
+h5 {
+    margin: 0;
+    padding: 0;
+}
+
+.team-header h5 {
+    margin-left: 20px;
+}
+
+.collection {
+    margin-top: 0;
+}
+
+.header {
+    text-align: center;
+    margin-top: 0;
+    background-color: darkgrey;
+    color: white;
+}

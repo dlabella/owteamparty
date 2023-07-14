@@ -19,9 +19,9 @@ class TeamManager extends ItemManager {
     }
 
     createRow(team) {
-        const template = "<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>";
-        const editButton = getButtonHtml("Edit", "js-edit-row");
-        const deleteButton = getButtonHtml("Delete", "js-delete-row");
+        const template = "<tr><td>{0}</td><td>{1}</td><td class='actions'>{2}</td></tr>";
+        const editButton = getButtonHtml("Edit", "js-edit-row action");
+        const deleteButton = getButtonHtml("Delete", "js-delete-row action");
         let row = template.replace("{0}", team.name)
             .replace("{1}", team.members.join(', '))
             .replace("{2}", editButton + deleteButton);
@@ -62,6 +62,8 @@ class TeamManager extends ItemManager {
         }
         this.updateItem(teamManager.editingIndex, team);
         showElement(this.actions.add);
+        this.actions.update.disabled = true;
+        this.actions.cancel.disabled = true;
         this.resetTeamFromUI();
     }
 
@@ -86,15 +88,16 @@ class TeamManager extends ItemManager {
     deleteTeam(index) {
         this.deleteItem(index);
     }
+
     initialize() {
 
-        const addButton = document.getElementById('addTeamButton');
+        const addButton = document.getElementById('add');
         addButton.addEventListener('click', () => this.addTeam());
 
-        const updateButton = document.getElementById('updateTeamButton');
+        const updateButton = document.getElementById('update');
         updateButton.addEventListener('click', () => this.updateTeam());
 
-        const cancelButton = document.getElementById('cancelButton');
+        const cancelButton = document.getElementById('cancel');
         cancelButton.addEventListener('click', () => this.cancelEdit());
         this.actions = {
             add: addButton,
@@ -106,4 +109,3 @@ class TeamManager extends ItemManager {
 }
 
 const teamManager = new TeamManager();
-  // You can now use teamManager.addItem(), teamManager.editItem(), and teamManager.deleteItem() methods.
