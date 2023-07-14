@@ -69,7 +69,7 @@ class ItemManager {
                 redirect: "follow",
                 referrerPolicy: "no-referrer",
                 body: JSON.stringify(data),
-            }).then(resp => resp.json());
+            }).then(resp => resp.json()).then((json)=>json.result);
         } else {
             return fetch(url, {
                 method: method,
@@ -78,7 +78,7 @@ class ItemManager {
                 credentials: "same-origin",
                 redirect: "follow",
                 referrerPolicy: "no-referrer",
-            }).then(resp => resp.json());
+            }).then(resp => resp.json()).then((json)=>json.result);
         }
     }
 }

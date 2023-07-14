@@ -1,4 +1,5 @@
-const db = require('@cyclic.sh/dynamodb');
+const CyclicDB = require('@cyclic.sh/dynamodb');
+const db = CyclicDB("owteamparty")
 const data = db.collection("items");
 // data={
 //     list:function(){return new Promise((resolve)=>resolve([]));},
