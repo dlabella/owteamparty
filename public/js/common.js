@@ -10,11 +10,12 @@ class ItemManager {
             self.initialize();
         }, false);
     }
-    getItems(){
+    getItems() {
         return this.apiCall(this.api, "GET");
     }
 
     addItem(item) {
+        item.id = generateGuid();
         this.items.push(item);
         this.apiCall(this.api, "POST", item);
         this.render();
@@ -50,11 +51,10 @@ class ItemManager {
                 credentials: "same-origin",
                 headers: {
                     "Content-Type": "application/json",
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                redirect: "follow", // manual, *follow, error
-                referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                body: JSON.stringify(data), // body data type must match "Content-Type" header
+                redirect: "follow",
+                referrerPolicy: "no-referrer",
+                body: JSON.stringify(data),
             }).then(resp => resp.json());
         } else {
             return fetch(url, {
@@ -62,11 +62,33 @@ class ItemManager {
                 mode: "cors",
                 cache: "no-cache",
                 credentials: "same-origin",
-                redirect: "follow", // manual, *follow, error
-                referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                redirect: "follow",
+                referrerPolicy: "no-referrer",
             }).then(resp => resp.json());
         }
     }
 }
 
+function generateGuid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+
+    return (
+        s4() +
+        s4() +
+        '-' +
+        s4() +
+        '-' +
+        s4() +
+        '-' +
+        s4() +
+        '-' +
+        s4() +
+        s4() +
+        s4()
+    );
+}
 
