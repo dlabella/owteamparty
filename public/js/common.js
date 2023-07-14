@@ -41,7 +41,7 @@ class ItemManager {
         throw new TypeError('Method initialize() must be implemented.');
     }
 
-    apiCall(url = "", method = "POST", data = nul) {
+    apiCall(url = "", method = "POST", data = null) {
         if (data) {
             return fetch(url, method, {
                 method: method,
