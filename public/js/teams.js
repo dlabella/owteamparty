@@ -10,11 +10,13 @@ class TeamManager extends ItemManager {
         table.innerHTML = '<tr><th>Name</th><th>Members</th><th>Action</th></tr>';
 
         // Add rows for each team
-        this.items.forEach(function (team, index) {
-            let row = self.createRow(team);
-            table.appendChild(row);
-            row.querySelector(".js-edit-row").addEventListener("click", () => self.editTeam(index));
-            row.querySelector(".js-delete-row").addEventListener("click", () => self.deleteTeam(index));
+        this.getItems().then((items) => {
+            items.forEach(function (team, index) {
+                let row = self.createRow(team);
+                table.appendChild(row);
+                row.querySelector(".js-edit-row").addEventListener("click", () => self.editTeam(index));
+                row.querySelector(".js-delete-row").addEventListener("click", () => self.deleteTeam(index));
+            });
         });
     }
 

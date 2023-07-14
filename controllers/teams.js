@@ -1,44 +1,54 @@
-// const teamsRepo = require('../repositories/teams.js');
+const repo = require('../repositories/teams.js');
 
-// const getTeams = ((req, res) => {
-//     teamsRepo.getAll().then((teams)=>{
-//         res.json(teams)
-//     });
-// })
+const getAll = ((req, res) => {
+    repo.getAll().then((teams) => {
+        res.json(teams)
+    });
+})
 
-// const getTeam = ((req, res) => {
-//     const id = Number(req.params.teamID)
-//     teamsRepo.get(id).then((team)=>{
-//         res.json(team)
-//     });
-// })
+const get = ((req, res) => {
+    const id = Number(req.params.id)
+    repo.get(id).then((team) => {
+        res.json(team)
+    });
+})
 
-// const createTeam = ((req, res) => {
-//     teamsRepo.create(id,name).then((team)=>{
-//         res.json(team)
-//     });
-// })
+const add = ((req, res) => {
+    const team = getTeamFromBody(req);
+    repo.add(team).then((team) => {
+        res.json(team)
+    });
+})
 
-// const updateTeam = ((req, res) => {
-//     const id = req.params.teamID;
-//     const name = req.params.name;
-//     const members = req.params.members;
-//     teamsRepo.update(id, name, members).then((team)=>
-//         res.json(team)
-//     )
-// });
+const update = ((req, res) => {
+    const team = getTeamFromBody(req);
+    repo.update(team).then((team) =>
+        res.json(team)
+    )
+});
 
-// const deleteTeam = ((req, res) => {
-//     const id = Number(req.params.teamID)
-//     teamsRepo.remove(id).then((team)=>{
-//         res.json(team);
-//     })
-// })
+const remove = ((req, res) => {
+    const id = Number(req.params.id)
+    repo.remove(id).then((team) => {
+        res.json(team);
+    })
+});
 
-// module.exports = {
-//     getTeams,
-//     getTeam,
-//     createTeam,
-//     updateTeam,
-//     deleteTeam
-// }
+const getTeamFromBody = (req) => {
+    const id = req.body.id;
+    const name = req.body.name;
+    const members = req.body.members;
+    return {
+        id: id,
+        name: name,
+        members: members
+    };
+};
+
+module.exports = {
+    getAll,
+    get,
+    add,
+    update,
+    remove
+}

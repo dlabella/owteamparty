@@ -1,22 +1,22 @@
-// const express = require('express')
-// const router = express.Router()
+const express = require('express')
+const router = express.Router()
 
-// const  { 
-//     getTeams,
-//     getTeam,
-//     createTeam,
-//     updateTeam,
-//     deleteTeam 
-// } = require('../controllers/teams.js')
+const  { 
+    getAll,
+    get,
+    add,
+    update,
+    remove 
+} = require('../controllers/teams.js')
 
-// router.get('/', getTeams)
+router.get('/', getAll)
 
-// router.get('/:teamID', getTeam)
+router.get('/:id', get)
 
-// router.post('/', createTeam) 
+router.post('/', add) 
 
-// router.put('/:teamID', updateTeam) 
+router.put('/:id', update) 
 
-// router.delete('/:teamID', deleteTeam)
+router.delete('/:id', remove)
 
-// module.exports = router
+module.exports = router
