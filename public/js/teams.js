@@ -12,7 +12,7 @@ class TeamManager extends ItemManager {
 
         // Add rows for each team
         this.getItems().then((items) => {
-            items.forEach(function (team, index) {
+            items.results.forEach(function (team, index) {
                 let row = self.createRow(team);
                 table.appendChild(row);
                 row.querySelector(".js-edit-row").addEventListener("click", () => self.editTeam(index));
