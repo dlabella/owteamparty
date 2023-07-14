@@ -2,6 +2,7 @@ class TeamManager extends ItemManager {
     constructor() {
         super();
         self = this;
+        this.api = "/api/teams";
     }
 
     render() {
