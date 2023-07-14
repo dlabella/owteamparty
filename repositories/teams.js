@@ -1,6 +1,11 @@
 const db = require('@cyclic.sh/dynamodb');
 const data = db.collection("items");
-
+// data={
+//     list:function(){return new Promise((resolve)=>resolve([]));},
+//     get:function(id){return new Promise((resolve)=>resolve({}));},
+//     set:function(id,item){return new Promise((resolve)=>resolve(item));},
+//     remove:function(id){return new Promise((resolve)=>resolve({}));}
+// }
 const getAll = (() => {
     return data.list();
 });
@@ -10,15 +15,16 @@ const get = ((id) => {
 });
 
 const add = ((item) => {
-    data.set(item.id, item);
+    debugger;
+    return data.set(item.id, item);
 });
 
-const update = ((id, item) => {
-    data.set(id, item);
+const update = ((item) => {
+    return data.set(item.id, item);
 });
 
 const remove = ((id) => {
-    data.remove(id)
+    return data.remove(id)
 });
 
 module.exports = {

@@ -14,17 +14,19 @@ const get = ((req, res) => {
 })
 
 const add = ((req, res) => {
-    const team = getTeamFromBody(req);
-    repo.add(team).then((team) => {
-        res.json(team)
+    const item = getItemFromBody(req);
+    repo.add(item).then((addedItem) => {
+        debugger;
+        res.json(addedItem)
     });
 })
 
 const update = ((req, res) => {
-    const team = getTeamFromBody(req);
-    repo.update(team).then((team) =>
-        res.json(team)
-    )
+    const item = getItemFromBody(req);
+    repo.update(item).then((updatedItem) => {
+        debugger;
+        res.json(updatedItem)
+    });
 });
 
 const remove = ((req, res) => {
@@ -34,7 +36,7 @@ const remove = ((req, res) => {
     })
 });
 
-const getTeamFromBody = (req) => {
+const getItemFromBody = (req) => {
     const id = req.body.id;
     const name = req.body.name;
     const members = req.body.members;
