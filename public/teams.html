@@ -2,70 +2,8 @@
 <html>
 <head>
   <title>Team Management</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .form-group input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      font-size: 16px;
-      border-radius: 4px;
-      border: 1px solid #ddd;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 4px;
-      border: none;
-      background-color: #4CAF50;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    .btn:hover {
-      background-color: #45a049;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      padding: 8px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .actions button {
-      padding: 5px 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/teams.css">
 </head>
 <body>
   <div class="container">
@@ -83,9 +21,9 @@
 
     <div class="form-group">
       <div class="actions">
-        <button id="addTeamButton" class="btn">Add Team</button>
-        <button id="updateTeamButton" class="btn" disabled>Update Team</button>
-        <button id="cancelButton" class="btn" disabled>Cancel</button>
+        <button id="addTeamButton" class="btn" type="button">Add Team</button>
+        <button id="updateTeamButton" class="btn" type="button" disabled>Update Team</button>
+        <button id="cancelButton" class="btn" type="button" disabled>Cancel</button>
       </div>
     </div>
 
@@ -99,6 +37,7 @@
     </table>
   </div>
   <script src="/js/common.js"></script>
+  <script src="/js/commonUi.js"></script>
   <script src="/js/teams.js"></script>
 </body>
 </html>

@@ -7,32 +7,27 @@ class TeamManager extends ItemManager {
     render() {
         // Get the team table
         let table = document.getElementById('teamTable');
-
-        // Clear the table body
         table.innerHTML = '<tr><th>Name</th><th>Members</th><th>Action</th></tr>';
 
         // Add rows for each team
         this.items.forEach(function (team, index) {
-            let row = table.insertRow();
-
-            let nameCell = row.insertCell();
-            nameCell.innerHTML = team.name;
-
-            let membersCell = row.insertCell();
-            membersCell.innerHTML = team.members.join(', ');
-
-            let actionCell = row.insertCell();
-            let editButton = document.createElement('button');
-            editButton.innerHTML = 'Edit';
-            editButton.addEventListener("click", () => self.editTeam(index));
-            actionCell.appendChild(editButton);
-
-            let deleteButton = document.createElement('button');
-            deleteButton.innerHTML = 'Delete';
-            deleteButton.addEventListener("click", () => self.deleteTeam(index));
-            actionCell.appendChild(deleteButton);
+            let row = self.createRow(team);
+            table.appendChild(row);
+            row.querySelector(".js-edit-row").addEventListener("click", () => self.editTeam(index));
+            row.querySelector(".js-delete-row").addEventListener("click", () => self.deleteTeam(index));
         });
     }
+
+    createRow(team) {
+        const template = "<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>";
+        const editButton = getButtonHtml("Edit", "js-edit-row");
+        const deleteButton = getButtonHtml("Delete", "js-delete-row");
+        let row = template.replace("{0}", team.name)
+            .replace("{1}", team.members.join(', '))
+            .replace("{2}", editButton + deleteButton);
+        return createHtmlElement(row);
+    }
+
     getTeamFromUI() {
         const teamName = document.getElementById('teamName').value;
         const teamMembers = document.getElementById('teamMembers').value.split(',');
@@ -41,19 +36,32 @@ class TeamManager extends ItemManager {
             members: teamMembers
         };
     }
+
     resetTeamFromUI() {
         document.getElementById('teamName').value = '';
         document.getElementById('teamMembers').value = '';
     }
+
     addTeam() {
         let team = this.getTeamFromUI();
+        if (!this.isValidTeam(team)) {
+            alert("Team must have a name and members!");
+            return;
+        }
         this.addItem(team);
         this.resetTeamFromUI();
     }
-
+    isValidTeam(team) {
+        return (team && team.name && team.name.trim() != "" && team.members && team.members.length > 0 && team.members[0] != "");
+    }
     updateTeam() {
         let team = this.getTeamFromUI();
+        if (!this.isValidTeam(team)) {
+            alert("Team must have a name and members!");
+            return;
+        }
         this.updateItem(teamManager.editingIndex, team);
+        showElement(this.actions.add);
         this.resetTeamFromUI();
     }
 
@@ -61,14 +69,17 @@ class TeamManager extends ItemManager {
         const team = this.items[index];
         document.getElementById('teamName').value = team.name;
         document.getElementById('teamMembers').value = team.members.join(', ');
-        document.getElementById('addTeamButton').style.display = 'none';
-        document.getElementById('updateTeamButton').style.display = 'inline-block';
-        document.getElementById('cancelButton').style.display = 'inline-block';
+        hideElement(this.actions.add);
+        this.actions.update.disabled = false;
+        this.actions.cancel.disabled = false;
         this.editingIndex = index;
     }
 
     cancelEdit() {
         this.editingIndex = -1;
+        this.actions.update.disabled = true;
+        this.actions.cancel.disabled = true;
+        showElement(this.actions.add);
         this.resetTeamFromUI();
     }
 
@@ -76,6 +87,7 @@ class TeamManager extends ItemManager {
         this.deleteItem(index);
     }
     initialize() {
+
         const addButton = document.getElementById('addTeamButton');
         addButton.addEventListener('click', () => this.addTeam());
 
@@ -84,7 +96,11 @@ class TeamManager extends ItemManager {
 
         const cancelButton = document.getElementById('cancelButton');
         cancelButton.addEventListener('click', () => this.cancelEdit());
-
+        this.actions = {
+            add: addButton,
+            update: updateButton,
+            cancel: cancelButton
+        };
         this.render();
     }
 }
