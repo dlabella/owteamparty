@@ -13,25 +13,39 @@ class ItemManager {
     getItems() {
         return this.apiCall(this.api, "GET");
     }
-
+    getItem(id) {
+        return this.apiCall(this.api + "/" + id, "GET");
+    }
     addItem(item) {
-        item.id = generateGuid();
-        this.items.push(item);
-        this.apiCall(this.api, "POST", item);
-        this.render();
+        return new Promise((resolve) => {
+            item.id = generateGuid();
+            this.items.push(item);
+            this.apiCall(this.api, "POST", item).then(() => {
+                this.render();
+                resolve(item);
+            });
+        });
     }
 
     updateItem(index, item) {
-        this.editingIndex = index;
-        this.items[index] = item;
-        this.apiCall(this.api, "PUT", item);
-        this.render();
+        return new Promise((resolve) => {
+            this.editingIndex = index;
+            this.items[index] = item;
+            this.apiCall(this.api, "PUT", item).then(() => {
+                this.render();
+                resolve(item);
+            })
+        });
     }
 
     deleteItem(index) {
-        let item = this.items.splice(index, 1);
-        this.apiCall(this.api + "/" + item.id, "DELETE");
-        this.render();
+        return new Promise((resolve) => {
+            let item = this.items.splice(index, 1);
+            this.apiCall(this.api + "/" + item.id, "DELETE").then(() => {
+                this.render();
+                resolve(item);
+            });
+        });
     }
 
     displayItems() {
