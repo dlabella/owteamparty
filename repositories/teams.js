@@ -1,5 +1,5 @@
 const CyclicDB = require('@cyclic.sh/dynamodb');
-const db = CyclicDB("owteamparty")
+const db = CyclicDB("expensive-yak-waistcoatCyclicDB")
 const data = db.collection("items");
 // data={
 //     list:function(){return new Promise((resolve)=>resolve([]));},
