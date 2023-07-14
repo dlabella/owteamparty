@@ -43,7 +43,7 @@ class ItemManager {
 
     apiCall(url = "", method = "POST", data = null) {
         if (data) {
-            return fetch(url, method, {
+            return fetch(url, {
                 method: method,
                 mode: "cors",
                 cache: "no-cache",
@@ -57,7 +57,7 @@ class ItemManager {
                 body: JSON.stringify(data), // body data type must match "Content-Type" header
             }).then(resp => resp.json);
         } else {
-            return fetch(url, method, {
+            return fetch(url, {
                 method: method,
                 mode: "cors",
                 cache: "no-cache",
