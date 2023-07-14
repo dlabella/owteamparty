@@ -55,7 +55,7 @@ class ItemManager {
                 redirect: "follow", // manual, *follow, error
                 referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
                 body: JSON.stringify(data), // body data type must match "Content-Type" header
-            }).then(resp => resp.json);
+            }).then(resp => resp.json());
         } else {
             return fetch(url, {
                 method: method,
@@ -64,7 +64,7 @@ class ItemManager {
                 credentials: "same-origin",
                 redirect: "follow", // manual, *follow, error
                 referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            }).then(resp => resp.json);
+            }).then(resp => resp.json());
         }
     }
 }
