@@ -2,21 +2,21 @@ const express = require('express')
 const router = express.Router()
 
 const  { 
-    getCompetitions,
-    getCompetition,
-    createCompetition,
-    updateCompetition,
-    deleteCompetition 
+    getAll,
+    get,
+    add,
+    update,
+    remove 
 } = require('../controllers/assignements.js')
 
-router.get('/', getCompetitions)
+router.get('/', getAll)
 
-router.get('/:id', getCompetition)
+router.get('/:id', get)
 
-router.post('/', createCompetition) 
+router.post('/', add) 
 
-router.put('/:id', updateCompetition) 
+router.put('/:id', update) 
 
-router.delete('/:id', deleteCompetition)
+router.delete('/:id', remove)
 
 module.exports = router

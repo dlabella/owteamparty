@@ -1,4 +1,4 @@
-const repo = require('../repositories/teams.js');
+const repo = require('../repositories/challenges.js');
 
 const getAll = ((req, res) => {
     repo.getAll().then((items) => {
@@ -7,7 +7,7 @@ const getAll = ((req, res) => {
 })
 
 const get = ((req, res) => {
-    const id = req.params.id
+    const id = req.params.id;
     repo.get(id).then((item) => {
         res.json(item)
     });
@@ -28,7 +28,7 @@ const update = ((req, res) => {
 });
 
 const remove = ((req, res) => {
-    const id = req.params.id
+    const id = req.params.id;
     repo.remove(id).then((item) => {
         res.json(item);
     })
@@ -37,11 +37,11 @@ const remove = ((req, res) => {
 const getItemFromBody = (req) => {
     const id = req.body.id;
     const name = req.body.name;
-    const members = req.body.members;
+    const score = req.body.score;
     return {
         id: id,
         name: name,
-        members: members
+        score: score
     };
 };
 

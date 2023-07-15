@@ -1,21 +1,22 @@
-const repo = require('../repositories/teams.js');
+const repo = require('../repositories/assignements.js');
 
 const getAll = ((req, res) => {
-    repo.getAll().then((items) => {
-        res.json(items)
+    repo.getAll().then((teams) => {
+        res.json(teams)
     });
 })
 
 const get = ((req, res) => {
-    const id = req.params.id
-    repo.get(id).then((item) => {
-        res.json(item)
+    const id = Number(req.params.id)
+    repo.get(id).then((team) => {
+        res.json(team)
     });
 })
 
 const add = ((req, res) => {
     const item = getItemFromBody(req);
     repo.add(item).then((addedItem) => {
+        debugger;
         res.json(addedItem)
     });
 })
@@ -23,14 +24,15 @@ const add = ((req, res) => {
 const update = ((req, res) => {
     const item = getItemFromBody(req);
     repo.update(item).then((updatedItem) => {
+        debugger;
         res.json(updatedItem)
     });
 });
 
 const remove = ((req, res) => {
-    const id = req.params.id
-    repo.remove(id).then((item) => {
-        res.json(item);
+    const id = Number(req.params.id)
+    repo.remove(id).then((team) => {
+        res.json(team);
     })
 });
 

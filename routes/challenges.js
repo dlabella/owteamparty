@@ -2,21 +2,21 @@ const express = require('express')
 const router = express.Router()
 
 const  { 
-    getChallenges,
-    getChallenge,
-    createChallenge,
-    updateChallenge,
-    deleteChallenge 
+    getAll,
+    get,
+    add,
+    update,
+    remove 
 } = require('../controllers/challenges.js')
 
-router.get('/', getChallenges)
+router.get('/', getAll)
 
-router.get('/:id', getChallenge)
+router.get('/:id', get)
 
-router.post('/', createChallenge) 
+router.post('/', add) 
 
-router.put('/:id', updateChallenge) 
+router.put('/:id', update) 
 
-router.delete('/:id', deleteChallenge)
+router.delete('/:id', remove)
 
 module.exports = router

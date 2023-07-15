@@ -8,15 +8,15 @@ class TeamManager extends ItemManager {
     render() {
         // Get the team table
         let table = document.getElementById('teamTable');
-        table.innerHTML = '<tr><th>Name</th><th>Members</th><th>Action</th></tr>';
 
         // Add rows for each team
         this.getItems().then((items) => {
-            items.results.forEach(function (team, index) {
+            table.innerHTML = '<tr><th>Name</th><th>Members</th><th>Action</th></tr>';
+            items.forEach(function (team, index) {
                 let row = self.createRow(team);
                 table.appendChild(row);
-                row.querySelector(".js-edit-row").addEventListener("click", () => self.editTeam(index));
-                row.querySelector(".js-delete-row").addEventListener("click", () => self.deleteTeam(index));
+                row.querySelector(".js-edit-row").addEventListener("click", () => self.editItem(index));
+                row.querySelector(".js-delete-row").addEventListener("click", () => self.removeItem(index));
             });
         });
     }
@@ -26,81 +26,44 @@ class TeamManager extends ItemManager {
         const editButton = getButtonHtml("Edit", "js-edit-row action");
         const deleteButton = getButtonHtml("Delete", "js-delete-row action");
         let row = template.replace("{0}", team.name)
-            .replace("{1}", team.members.join(', '))
+            .replace("{1}", (team.members ? team.members.join(', ') : ""))
             .replace("{2}", editButton + deleteButton);
         return createHtmlElement(row);
     }
 
-    getTeamFromUI() {
+    getItemFromUI() {
+        const teamNameId = document.getElementById('teamId').value;
         const teamName = document.getElementById('teamName').value;
-        const teamMembers = document.getElementById('teamMembers').value.split(',');
+        const teamMembers = document.getElementById('teamMembers').value.split(',').map(x=>x.trim());
         return {
+            id: teamNameId,
             name: teamName,
             members: teamMembers
         };
     }
 
-    resetTeamFromUI() {
+    setItemOnUI(item) {
+        document.getElementById('teamId').value=item.id;
+        document.getElementById('teamName').value=item.name;
+        document.getElementById('teamMembers').value=(item.members?item.members.map((x)=>x.trim()).join(", "):"");    
+    }
+
+    resetItemOnUI() {
+        document.getElementById('teamId').value = '';
         document.getElementById('teamName').value = '';
         document.getElementById('teamMembers').value = '';
     }
 
-    addTeam() {
-        let team = this.getTeamFromUI();
-        if (!this.isValidTeam(team)) {
-            alert("Team must have a name and members!");
-            return;
-        }
-        this.addItem(team);
-        this.resetTeamFromUI();
-    }
-
-    isValidTeam(team) {
-        return (team && team.name && team.name.trim() != "" && team.members && team.members.length > 0 && team.members[0] != "");
-    }
-    
-    updateTeam() {
-        let team = this.getTeamFromUI();
-        if (!this.isValidTeam(team)) {
-            alert("Team must have a name and members!");
-            return;
-        }
-        this.updateItem(teamManager.editingIndex, team);
-        showElement(this.actions.add);
-        this.actions.update.disabled = true;
-        this.actions.cancel.disabled = true;
-        this.resetTeamFromUI();
-    }
-
-    editTeam(index) {
-        const team = this.items[index];
-        document.getElementById('teamName').value = team.name;
-        document.getElementById('teamMembers').value = team.members.join(', ');
-        hideElement(this.actions.add);
-        this.actions.update.disabled = false;
-        this.actions.cancel.disabled = false;
-        this.editingIndex = index;
-    }
-
-    cancelEdit() {
-        this.editingIndex = -1;
-        this.actions.update.disabled = true;
-        this.actions.cancel.disabled = true;
-        showElement(this.actions.add);
-        this.resetTeamFromUI();
-    }
-
-    deleteTeam(index) {
-        this.deleteItem(index);
+    isValid(item) {
+        return (item && item.name && item.name.trim() != "" && item.members && item.members.length > 0 && item.members[0] != "");
     }
 
     initialize() {
-
         const addButton = document.getElementById('add');
-        addButton.addEventListener('click', () => this.addTeam());
+        addButton.addEventListener('click', () => this.addItem());
 
         const updateButton = document.getElementById('update');
-        updateButton.addEventListener('click', () => this.updateTeam());
+        updateButton.addEventListener('click', () => this.saveItem());
 
         const cancelButton = document.getElementById('cancel');
         cancelButton.addEventListener('click', () => this.cancelEdit());
