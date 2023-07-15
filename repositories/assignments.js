@@ -1,6 +1,6 @@
 const CyclicDB = require('@cyclic.sh/dynamodb');
 const db = CyclicDB("expensive-yak-waistcoatCyclicDB")
-const data = db.collection("assignements");
+const data = db.collection("assignments");
 // data={
 //     list:function(){return new Promise((resolve)=>resolve([]));},
 //     get:function(id){return new Promise((resolve)=>resolve({}));},
@@ -33,7 +33,6 @@ const get = ((id) => {
 });
 
 const add = ((item) => {
-    debugger;
     return data.set(item.id, item);
 });
 

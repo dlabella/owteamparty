@@ -7,7 +7,7 @@ const  {
     add,
     update,
     remove 
-} = require('../controllers/assignements.js')
+} = require('../controllers/assignments.js')
 
 router.get('/', getAll)
 

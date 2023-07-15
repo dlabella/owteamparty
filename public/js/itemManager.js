@@ -12,21 +12,21 @@ class ItemManager {
     }
     getItems() {
         return new Promise((resolve)=>{
-            this.apiCall(this.api, "GET").then(items=>{
+            apiCall(this.api, "GET").then(items=>{
                 this.items=items;
                 resolve(items);
             });
         });
     }
     getItem(id) {
-        return this.apiCall(this.api + "/" + id, "GET");
+        return apiCall(this.api + "/" + id, "GET");
     }
 
     postItem(item) {
         return new Promise((resolve) => {
             item.id = generateGuid();
             this.items.push(item);
-            this.apiCall(this.api, "POST", item).then(() => {
+            apiCall(this.api, "POST", item).then(() => {
                 this.render();
                 resolve(item);
             });
@@ -35,7 +35,7 @@ class ItemManager {
 
     putItem(item) {
         return new Promise((resolve) => {
-            this.apiCall(this.api + "/" + item.id, "PUT", item).then(() => {
+            apiCall(this.api + "/" + item.id, "PUT", item).then(() => {
                 this.render();
                 resolve(item);
             })
@@ -44,7 +44,7 @@ class ItemManager {
 
     deleteItem(item) {
         return new Promise((resolve) => {
-            this.apiCall(this.api + "/" + item.id, "DELETE").then(() => {
+            apiCall(this.api + "/" + item.id, "DELETE").then(() => {
                 this.render();
                 resolve(item);
             });
@@ -126,31 +126,7 @@ class ItemManager {
         this.actions.cancel.disabled = true;
     }
 
-    apiCall(url = "", method = "POST", data = null) {
-        if (data) {
-            return fetch(url, {
-                method: method,
-                mode: "cors",
-                cache: "no-cache",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                redirect: "follow",
-                referrerPolicy: "no-referrer",
-                body: JSON.stringify(data),
-            }).then(resp => resp.json());
-        } else {
-            return fetch(url, {
-                method: method,
-                mode: "cors",
-                cache: "no-cache",
-                credentials: "same-origin",
-                redirect: "follow",
-                referrerPolicy: "no-referrer",
-            }).then(resp => resp.json());
-        }
-    }
+    
 }
 
 

@@ -1,4 +1,4 @@
-const repo = require('../repositories/assignements.js');
+const repo = require('../repositories/assignments.js');
 
 const getAll = ((req, res) => {
     repo.getAll().then((teams) => {

@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const teams_route = require('./routes/teams.js');
 const challenges_route = require('./routes/challenges.js');
-const assignments_route = require('./routes/assignements.js');
+const assignments_route = require('./routes/assignments.js');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,7 +21,7 @@ var options = {
 app.use(express.static('public', options));
 app.use('/api/teams', teams_route);
 app.use('/api/challenges', challenges_route);
-app.use('/api/assignements', assignments_route);
+app.use('/api/assignments', assignments_route);
 // #############################################################################
 
 // // Create or Update an item
