@@ -1,4 +1,4 @@
-class ItemManager {
+class ItemManager extends ItemCollection {
     constructor() {
         let self = this;
         if (new.target === ItemManager) {
@@ -6,49 +6,14 @@ class ItemManager {
         }
         this.items = [];
         this.api = "/api/";
+        
+        this.onPostItem=self.render;
+        this.onPutItem=self.render;
+        this.onDeleteItem=self.render;
+
         document.addEventListener('DOMContentLoaded', function () {
             self.initialize();
         }, false);
-    }
-    getItems() {
-        return new Promise((resolve)=>{
-            apiCall(this.api, "GET").then(items=>{
-                this.items=items;
-                resolve(items);
-            });
-        });
-    }
-    getItem(id) {
-        return apiCall(this.api + "/" + id, "GET");
-    }
-
-    postItem(item) {
-        return new Promise((resolve) => {
-            item.id = generateGuid();
-            this.items.push(item);
-            apiCall(this.api, "POST", item).then(() => {
-                this.render();
-                resolve(item);
-            });
-        });
-    }
-
-    putItem(item) {
-        return new Promise((resolve) => {
-            apiCall(this.api + "/" + item.id, "PUT", item).then(() => {
-                this.render();
-                resolve(item);
-            })
-        });
-    }
-
-    deleteItem(item) {
-        return new Promise((resolve) => {
-            apiCall(this.api + "/" + item.id, "DELETE").then(() => {
-                this.render();
-                resolve(item);
-            });
-        });
     }
 
     displayItems() {

@@ -18,12 +18,12 @@ Every time you kill someone, emote (at least 3 times in the game) (this one can 
 //     { id: 3, name: 'Other team decide your comp', score: 30 },
 //     { id: 4, name: 'Every time you kill someone, emote (at least 3 times in the game)', score: 40 },
 //     { id: 5, name: 'Every time you been killed do a fart sound or qwack or something', score: 10 }
+
 // ];
-let self=this;
-self.challenges = [];
-self.teams = [];
-// Function to generate the dashboard view
-self.assignments = [];
+let self = this;
+self.challenges = new ItemCollection("/api/challenges");
+self.teams = new ItemCollection("/api/teams");
+self.assignments = new ItemCollection("/api/assignments");;
 
 
 // Function to generate the dashboard view
@@ -31,7 +31,7 @@ function generateDashboard() {
     var $dashboard = $('#dashboard');
     $dashboard.empty();
 
-    self.teams.forEach(function (team) {
+    self.teams.items.forEach(function (team) {
         var $teamSection = $('<div>').addClass('team-section');
         var $teamHeaderGroup = $('<div>').addClass('team-header-group');
         var $teamHeaderTop = $('<div>').addClass('team-header');
@@ -46,13 +46,15 @@ function generateDashboard() {
         $teamSection.append($teamHeaderGroup);
 
         var $challengesList = $('<ul>').addClass('collection');
-        self.challenges.forEach(function (challenge) {
+        self.challenges.items.forEach(function (challenge) {
             var $challengeItem = $('<li>').addClass('collection-item');
-
+            var assignment = getAssignment(team.id, challenge.id);
+            var completed = assignment ? assignment.completed : false;
+            var comletionText = assignment ? assignment.completionText : "";
             var $completedCheckbox = $('<input>')
                 .attr('type', 'checkbox')
                 .prop('id', 'team' + team.id + '-challenge' + challenge.id)
-                .prop('checked', isChallengeCompleted(team.id, challenge.id))
+                .prop('checked', completed)
                 .on('change', function () {
                     var completed = $(this).is(':checked');
                     var completionText = prompt('Enter completion text for ' + team.name + ' - ' + challenge.name);
@@ -66,10 +68,9 @@ function generateDashboard() {
                         $(this).prop('checked', !completed);
                     }
                 });
-
             var $checkboxLabel = $('<label>').attr('for', 'team' + team.id + '-challenge' + challenge.id);
             $checkboxLabel.append($completedCheckbox);
-            $checkboxLabel.append('<span>' + challenge.name + ' - Score: ' + challenge.score + '</span>');
+            $checkboxLabel.append('<span>' + challenge.name + ' - Score: ' + challenge.score + ' ' + comletionText + '</span>');
 
             $challengeItem.append($checkboxLabel);
             $challengesList.append($challengeItem);
@@ -82,49 +83,57 @@ function generateDashboard() {
 
 // Function to check if a challenge is completed for a team
 function isChallengeCompleted(teamId, challengeId) {
-    var assignment = self.assignments.find(function (a) {
+    var assignment = self.assignments.items.find(function (a) {
         return a.teamId === teamId && a.challengeId === challengeId;
     });
 
     return assignment ? assignment.completed : false;
 }
+function getAssignment(teamId, challengeId) {
+    var assignment = self.assignments.items.find(function (a) {
+        return a.teamId === teamId && a.challengeId === challengeId;
+    });
+    return assignment;
+}
 
 // Function to update the completion status of a challenge for a team
 function updateChallengeCompletion(teamId, challengeId, completed, completionText) {
-    var assignment = self.assignments.find(function (a) {
+    var assignment = self.assignments.items.find(function (a) {
         return a.teamId === teamId && a.challengeId === challengeId;
     });
 
     if (assignment) {
         assignment.completed = completed;
         assignment.completionText = completionText;
+        self.assignments.putItem(assignment);
     } else {
-        self.assignments.push({
+        let newAssignment = {
             teamId: teamId,
             challengeId: challengeId,
             completed: completed,
             completionText: completionText
-        });
+        };
+        self.assignments.postItem(newAssignment);
     }
 }
 
 // Function to update the completion text on the selected challenge
 function updateCompletionText(teamId, challengeId, completionText) {
     var $challengeLabel = $('label[for="team' + teamId + '-challenge' + challengeId + '"] span');
-    let challenge= getChallengeById(challengeId);
+    let challenge = getChallengeById(challengeId);
     $challengeLabel.text(challenge.name + ' - Score: ' + challenge.score + ' - ' + completionText);
 }
-function getChallengeById(challengeId){
-    return self.challenges.find(x=>x.id===challengeId)[0];
+function getChallengeById(challengeId) {
+    return self.challenges.items.find(x => x.id === challengeId);
 }
 // Function to update the score of challenges completed by each team
 function updateScore() {
-    self.teams.forEach(function (team) {
-        var completedChallenges = self.assignments.filter(function (a) {
+    self.teams.items.forEach(function (team) {
+        var completedChallenges = self.assignments.items.filter(function (a) {
             return a.teamId === team.id && a.completed;
         });
-        var challenge = getChallengeById(assignment.challengeId);
         var totalScore = completedChallenges.reduce(function (score, assignment) {
+            var challenge = getChallengeById(assignment.challengeId);
             return score + challenge.score;
         }, 0);
 
@@ -132,27 +141,22 @@ function updateScore() {
     });
 }
 
-function initialize(){
-    apiCall("/api/teams","GET").then(items=>{
-        self.teams=items||[];
-        self.teamsLoaded=true;
-        if (self.teamsLoaded && self.challengesLoaded&& this.assignmentsLoaded){
+function initialize() {
+    self.teams.getItems().then(() => {
+        self.teamsLoaded = true;
+        if (self.teamsLoaded && self.challengesLoaded && this.assignmentsLoaded) {
             generateDashboard();
         }
     });
-
-    apiCall("/api/challenges","GET").then(items=>{
-        self.challenges=items||[];
-        self.challengesLoaded=true;
-        if (self.teamsLoaded && self.challengesLoaded&& this.assignmentsLoaded){
+    self.challenges.getItems().then(() => {
+        self.challengesLoaded = true;
+        if (self.teamsLoaded && self.challengesLoaded && this.assignmentsLoaded) {
             generateDashboard();
         }
     });
-
-    apiCall("/api/assignments","GET").then(items=>{
-        this.assignments=items||[];
-        this.assignmentsLoaded=true;
-        if (this.teamsLoaded && this.challengesLoaded && this.assignmentsLoaded){
+    self.assignments.getItems().then(() => {
+        self.assignmentsLoaded = true;
+        if (self.teamsLoaded && self.challengesLoaded && this.assignmentsLoaded) {
             generateDashboard();
         }
     });

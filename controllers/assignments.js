@@ -16,7 +16,6 @@ const get = ((req, res) => {
 const add = ((req, res) => {
     const item = getItemFromBody(req);
     repo.add(item).then((addedItem) => {
-        debugger;
         res.json(addedItem)
     });
 })
@@ -24,7 +23,6 @@ const add = ((req, res) => {
 const update = ((req, res) => {
     const item = getItemFromBody(req);
     repo.update(item).then((updatedItem) => {
-        debugger;
         res.json(updatedItem)
     });
 });
@@ -38,12 +36,17 @@ const remove = ((req, res) => {
 
 const getItemFromBody = (req) => {
     const id = req.body.id;
-    const name = req.body.name;
-    const members = req.body.members;
+    const teamId = req.body.teamId;
+    const challengeId = req.body.challengeId;
+    const completed = req.body.completed;
+    const completionText = req.body.completionText;
+
     return {
         id: id,
-        name: name,
-        members: members
+        teamId: teamId,
+        challengeId: challengeId,
+        completed: completed,
+        completionText: completionText
     };
 };
 
