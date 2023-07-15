@@ -8,11 +8,12 @@ class TeamManager extends ItemManager {
     render() {
         // Get the team table
         let table = document.getElementById('teamTable');
-
-        // Add rows for each team
+        showLoader();
+        // Add rhideLoader();ows for each team
         this.getItems().then((items) => {
             table.innerHTML = '<tr><th>Name</th><th>Members</th><th>Action</th></tr>';
             items.forEach(function (team, index) {
+                hideLoader();
                 let row = self.createRow(team);
                 table.appendChild(row);
                 row.querySelector(".js-edit-row").addEventListener("click", () => self.editItem(index));
@@ -67,6 +68,10 @@ class TeamManager extends ItemManager {
 
         const cancelButton = document.getElementById('cancel');
         cancelButton.addEventListener('click', () => this.cancelEdit());
+
+        const clearButton = document.getElementById('clear');
+        clearButton.addEventListener('click', () => this.clear());
+
         this.actions = {
             add: addButton,
             update: updateButton,

@@ -6,22 +6,35 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/materialize-css@1.0.0/dist/css/materialize.min.css">
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/competition.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
 <body>
-    <div class="container">
-        <h2 class="header">Community night comp</h2>
-
-        <div class="container">
-            <div id="dashboard"></div>
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo center">Competition</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/teams">Teams</a></li>
+                <li><a href="/challenges">Challenges</a></li>
+                <li>
+                    <button id="clear" class="btn waves-effect waves-light deep-purple darken-1" type="button">Start/Restart Comp</button>
+                </li>
+            </ul>
         </div>
+    </nav>
+    <div class="spinner">
+        <span class="loader"></span>
+    </div>
+    <div class="container content">
+        <div id="dashboard"></div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/materialize-css@1.0.0/dist/js/materialize.min.js"></script>
-        <script src="/js/common.js"></script>
-        <script src="/js/itemCollection.js"></script>
-        <script src="/js/commonUi.js"></script>
-        <script src="/js/competition.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/materialize-css@1.0.0/dist/js/materialize.min.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/itemCollection.js"></script>
+    <script src="/js/commonUi.js"></script>
+    <script src="/js/competition.js"></script>
 </body>
 
 </html>

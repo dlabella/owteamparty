@@ -7,7 +7,7 @@ const getAll = ((req, res) => {
 })
 
 const get = ((req, res) => {
-    const id = Number(req.params.id)
+    const id = req.params.id;
     repo.get(id).then((team) => {
         res.json(team)
     });
@@ -28,7 +28,7 @@ const update = ((req, res) => {
 });
 
 const remove = ((req, res) => {
-    const id = Number(req.params.id)
+    const id = req.params.id;
     repo.remove(id).then((team) => {
         res.json(team);
     })

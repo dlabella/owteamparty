@@ -6,11 +6,13 @@ class ChallengeManager extends ItemManager {
     }
 
     render() {
+        showLoader();
         // Get the challenge table
         let table = document.getElementById('challengeTable');
 
         // Add rows for each challenge
         this.getItems().then((items) => {
+            hideLoader();
             table.innerHTML = '<tr><th>Name</th><th>Score</th><th>Action</th></tr>';
             items.forEach(function (challenge, index) {
                 let row = self.createRow(challenge);
@@ -72,6 +74,8 @@ class ChallengeManager extends ItemManager {
             update: updateButton,
             cancel: cancelButton
         };
+        const clearButton = document.getElementById('clear');
+        clearButton.addEventListener('click', () => this.clear());
         this.render();
     }
 }

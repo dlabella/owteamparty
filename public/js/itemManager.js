@@ -1,5 +1,6 @@
 class ItemManager extends ItemCollection {
     constructor() {
+        super();
         let self = this;
         if (new.target === ItemManager) {
             throw new TypeError('Cannot instantiate abstract class.');

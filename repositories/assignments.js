@@ -41,7 +41,7 @@ const update = ((item) => {
 });
 
 const remove = ((id) => {
-    return data.remove(id)
+    return data.delete(id)
 });
 
 module.exports = {

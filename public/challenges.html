@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Challenge Management</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/materialize-css@1.0.0/dist/css/materialize.min.css">
   <link rel="stylesheet" href="/css/common.css">
   <link rel="stylesheet" href="/css/challenges.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
+
 <body>
-  <div class="container">
-    <h1 class="header">Challenge Management</h1>
+
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">Challenge Management</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="/">Competition</a></li>
+        <li><a href="/teams">Teams</a></li>
+        <li>
+          <button id="clear" class="btn waves-effect waves-light deep-purple darken-1 red" type="button">Clear Challenges</button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="spinner">
+    <span class="loader"></span>
+  </div>
+  <div class="container content">
     <input type="hidden" id="challengeId">
     <div class="row">
       <div class="input-field col s10">
@@ -23,13 +41,11 @@
     </div>
     <div class="row">
       <div class="col s12">
-        <button id="add" class="btn waves-effect waves-light" type="button">Add Challenge</button>
-        <button id="update" class="btn waves-effect waves-light" type="button" disabled>Update Challenge</button>
-        <button id="cancel" class="btn waves-effect waves-light" type="button" disabled>Cancel</button>
+        <button id="add" class="btn waves-effect waves-light deep-purple darken-1" type="button">Add Challenge</button>
+        <button id="update" class="btn waves-effect waves-light deep-purple darken-1" type="button" disabled>Update Challenge</button>
+        <button id="cancel" class="btn waves-effect waves-light deep-purple darken-1 " type="button" disabled>Cancel</button>
       </div>
     </div>
-
-    <h2 class="header">Teams</h2>
     <table id="challengeTable" class="striped">
       <thead>
         <tr>
@@ -50,4 +66,5 @@
   <script src="/js/itemManager.js"></script>
   <script src="/js/challenges.js"></script>
 </body>
+
 </html>

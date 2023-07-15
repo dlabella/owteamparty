@@ -23,11 +23,15 @@ Every time you kill someone, emote (at least 3 times in the game) (this one can 
 let self = this;
 self.challenges = new ItemCollection("/api/challenges");
 self.teams = new ItemCollection("/api/teams");
-self.assignments = new ItemCollection("/api/assignments");;
+self.assignments = new ItemCollection("/api/assignments");
+self.assignments.onClear = initialize;
 
-
+function clear() {
+    self.assignments.clear();
+}
 // Function to generate the dashboard view
 function generateDashboard() {
+    hideLoader();
     var $dashboard = $('#dashboard');
     $dashboard.empty();
 
@@ -36,7 +40,7 @@ function generateDashboard() {
         var $teamHeaderGroup = $('<div>').addClass('team-header-group');
         var $teamHeaderTop = $('<div>').addClass('team-header');
         var $teamHeaderBottom = $('<div>').addClass('team-header');
-        var $teamName = $('<h3>').text(team.name);
+        var $teamName = $('<h3 class="team-name">').text(team.name);
         var $teamMembers = $('<h5>').text(team.members.join(", "));
         var $teamScore = $('<span>').attr('id', 'team' + team.id + '-score').text('Score: 0');
 
@@ -142,6 +146,7 @@ function updateScore() {
 }
 
 function initialize() {
+    showLoader();
     self.teams.getItems().then(() => {
         self.teamsLoaded = true;
         if (self.teamsLoaded && self.challengesLoaded && this.assignmentsLoaded) {
@@ -160,5 +165,7 @@ function initialize() {
             generateDashboard();
         }
     });
+    const clearButton = document.getElementById('clear');
+    clearButton.addEventListener('click', () => this.clear());
 }
 initialize();
